@@ -1,6 +1,7 @@
 package com.example.roxiler.services;
 
 import com.example.roxiler.dtos.CategoryDTO;
+import com.example.roxiler.dtos.CombinedResponseDTO;
 import com.example.roxiler.dtos.PriceRangeDTO;
 import com.example.roxiler.dtos.StatisticsDTO;
 import com.example.roxiler.models.ProductTransaction;
@@ -109,4 +110,18 @@ public class ProductTransactionService {
                 .map(entry -> new CategoryDTO(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
+
+    public CombinedResponseDTO getCombinedData(int month) {
+        StatisticsDTO statistics = getStatistics(month);
+        List<PriceRangeDTO> priceRanges = getPriceRangeData(month);
+        List<CategoryDTO> categories = getCategoryData(month);
+
+        CombinedResponseDTO combinedResponse = new CombinedResponseDTO();
+        combinedResponse.setStatistics(statistics);
+        combinedResponse.setPriceRanges(priceRanges);
+        combinedResponse.setCategories(categories);
+
+        return combinedResponse;
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.example.roxiler.controllers;
 
-import com.example.roxiler.dtos.CategoryDTO;
-import com.example.roxiler.dtos.PriceRangeDTO;
-import com.example.roxiler.dtos.ProductTransactionDTO;
-import com.example.roxiler.dtos.StatisticsDTO;
+import com.example.roxiler.dtos.*;
 import com.example.roxiler.models.ProductTransaction;
 import com.example.roxiler.services.ProductTransactionService;
 import org.springframework.data.domain.Pageable;
@@ -66,9 +63,9 @@ public class ProductTransactionController {
     public List<CategoryDTO> getCategoryData(@RequestParam int month) {
         return transactionService.getCategoryData(month);
     }
-//
-//    @GetMapping("/combined")
-//    public CombinedResponseDTO getCombinedData(@RequestParam int month) {
-//        return transactionService.getCombinedData(month);
-//    }
+
+    @GetMapping("/combined-data")
+    public CombinedResponseDTO getCombinedData(@RequestParam int month) {
+        return transactionService.getCombinedData(month);
+    }
 }

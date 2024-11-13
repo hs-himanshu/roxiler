@@ -21,6 +21,7 @@ public class ProductTransactionService {
     private final ProductTransactionRepository repository;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+//    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
 
     public List<ProductTransaction> listTransactions(int month, String search, Pageable pageable) {
         Page<ProductTransaction> page;
@@ -40,8 +41,25 @@ public class ProductTransactionService {
     }
 
     public StatisticsDTO getStatistics(int month) {
-        // Calculate total sale amount, sold items, and unsold items
-        return null;
+        List<ProductTransaction> transactions = repository.findAll(); // or find a more efficient query for fetching only required data
+
+        double totalSaleAmount = 0;
+        int totalSoldItems = 0;
+        int totalNotSoldItems = 0;
+
+        for (ProductTransaction transaction : transactions) {
+//            LocalDateTime saleDate = LocalDateTime.parse(transaction.getDateOfSale(), formatter);
+            if (transaction.getDateOfSale().getMonthValue() == month) {
+                if (transaction.isSold()) {
+                    totalSaleAmount += transaction.getPrice();
+                    totalSoldItems++;
+                } else {
+                    totalNotSoldItems++;
+                }
+            }
+        }
+
+        return new StatisticsDTO(totalSaleAmount, totalSoldItems, totalNotSoldItems);
     }
 
     public List<PriceRangeDTO> getPriceRangeData(int month) {

@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -99,7 +101,12 @@ public class ProductTransactionService {
     }
 
     public List<CategoryDTO> getCategoryData(int month) {
-        // Implement unique categories with item counts
-        return null;
+        List<ProductTransaction> transactions = repository.findByMonth(month);
+        Map<String, Long> categoryCounts = transactions.stream()
+                .collect(Collectors.groupingBy(ProductTransaction::getCategory, Collectors.counting()));
+
+        return categoryCounts.entrySet().stream()
+                .map(entry -> new CategoryDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 }
